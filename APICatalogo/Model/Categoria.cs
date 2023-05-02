@@ -1,26 +1,28 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace APICatalogo.Model;
 /// <summary>
 /// Propriedade anêmica
 /// </summary>
 
-[Table("Categoria")]
+[Table("Categorias")]
 public class Categoria
 {
     public Categoria()
     {
-        Produto= new Collection<Produto>();
+        Produtos = new Collection<Produto>();
     }
     [Key]
-    public int IdCategoria { get; set; }
+    public int CategoriaId { get; set; }
     [Required]
-    [MaxLength(100)]    
-    public string? Nome { get; set; }    
+    [MaxLength(100)]
+    public string? Nome { get; set; }
     [Required]
     [MaxLength(300)]
     public string? ImagemURL { get; set; }
-    public ICollection<Produto> Produto { get; set; }
+    [JsonIgnore(Condition =JsonIgnoreCondition.WhenWritingNull)]
+    public ICollection<Produto>? Produtos { get; set; }
 }

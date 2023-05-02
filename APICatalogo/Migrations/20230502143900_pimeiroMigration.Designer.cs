@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace APICatalogo.Migrations
 {
     [DbContext(typeof(ApiCatalogoAppDbContext))]
-    [Migration("20230426190101_NomeCampoajuste")]
-    partial class NomeCampoajuste
+    [Migration("20230502143900_pimeiroMigration")]
+    partial class pimeiroMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,7 +24,7 @@ namespace APICatalogo.Migrations
 
             modelBuilder.Entity("APICatalogo.Model.Categoria", b =>
                 {
-                    b.Property<int>("IdCategoria")
+                    b.Property<int>("CategoriaId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
@@ -38,21 +38,18 @@ namespace APICatalogo.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("varchar(100)");
 
-                    b.HasKey("IdCategoria");
+                    b.HasKey("CategoriaId");
 
-                    b.ToTable("Categoria");
+                    b.ToTable("Categorias");
                 });
 
             modelBuilder.Entity("APICatalogo.Model.Produto", b =>
                 {
-                    b.Property<int>("IdProduto")
+                    b.Property<int>("ProdutoId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("CategoriID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("CategoriaIdCategoria")
+                    b.Property<int>("CategoriaId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("DataCadastro")
@@ -63,8 +60,8 @@ namespace APICatalogo.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("varchar(200)");
 
-                    b.Property<int>("Estoque")
-                        .HasColumnType("int");
+                    b.Property<float>("Estoque")
+                        .HasColumnType("float");
 
                     b.Property<string>("ImagemUrl")
                         .IsRequired()
@@ -79,18 +76,20 @@ namespace APICatalogo.Migrations
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(10,2)");
 
-                    b.HasKey("IdProduto");
+                    b.HasKey("ProdutoId");
 
-                    b.HasIndex("CategoriaIdCategoria");
+                    b.HasIndex("CategoriaId");
 
-                    b.ToTable("Produto");
+                    b.ToTable("Produtos");
                 });
 
             modelBuilder.Entity("APICatalogo.Model.Produto", b =>
                 {
                     b.HasOne("APICatalogo.Model.Categoria", "Categoria")
                         .WithMany("Produtos")
-                        .HasForeignKey("CategoriaIdCategoria");
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Categoria");
                 });

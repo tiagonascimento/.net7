@@ -25,7 +25,7 @@ namespace APICatalogo.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<Categoria>> Get()
         {
-            var categoria = _context.Categoria.ToList();
+            var categoria = _context.Categorias.AsNoTracking().ToList();
             if (categoria != null)
                 return categoria;
             return NotFound();
@@ -37,7 +37,7 @@ namespace APICatalogo.Controllers
 
             
 
-            var categoria = _context.Categoria.Include(p => p.Produto).ToList();
+            var categoria = _context.Categorias.AsNoTracking().Include(p => p.Produtos).ToList();
 
             if (categoria is null)
             {
@@ -49,7 +49,7 @@ namespace APICatalogo.Controllers
         [HttpGet("{id:int}", Name = "ObterCategoria")]
         public ActionResult<Categoria> Get(int id)
         {
-            var categoria = _context.Categoria.FirstOrDefault(p => p.IdCategoria == id);
+            var categoria = _context.Categorias.AsNoTracking().FirstOrDefault(p => p.CategoriaId == id);
             if (categoria is null)
             {
                 return NotFound("Categoria  não encontrado");
@@ -63,17 +63,17 @@ namespace APICatalogo.Controllers
             if (categoria is null)
                 return BadRequest();
 
-            _context.Categoria.Add(categoria);
+            _context.Categorias.Add(categoria);
             _context.SaveChanges();
             return new CreatedAtRouteResult("ObterCategoria",
-                new { id = categoria.IdCategoria }, categoria);
+                new { id = categoria.CategoriaId }, categoria);
 
 
         }
         [HttpPut("{id:int}")]
         public ActionResult Put(int id, Categoria categoria)
         {
-            if (categoria is null || id != categoria.IdCategoria)
+            if (categoria is null || id != categoria.CategoriaId)
             {
                 return BadRequest();
             }
@@ -84,7 +84,7 @@ namespace APICatalogo.Controllers
         [HttpDelete("{id:int}")]
         public ActionResult Delete(int id)
         {
-            var categoria = _context.Categoria.FirstOrDefault(p => p.IdCategoria == id);
+            var categoria = _context.Categorias.FirstOrDefault(p => p.CategoriaId == id);
             if (categoria is null)
             {
                 return BadRequest("Produto não Categoria");
